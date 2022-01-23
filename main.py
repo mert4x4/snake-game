@@ -1,4 +1,6 @@
 import pygame
+import random
+
 
 screen_size = (640,480)
 screen = pygame.display.set_mode(screen_size)
@@ -7,6 +9,7 @@ clock = pygame.time.Clock()
 
 running = True
 gridlen = 20
+
 
 class Rectangle():
     def __init__(self,x,y,color):
@@ -30,10 +33,12 @@ class Snake():
         self.len = len
         self.rects = []
         self.rects.append(Rectangle(self.x,self.y,(255,255,0)))
-        self.rects.append(Rectangle(self.x-20,self.y,(255,255,0)))
-        self.rects.append(Rectangle(self.x-40,self.y,(255,255,0)))
+        self.rects.append(Rectangle(self.x,self.y,(255,255,0)))
+
     def addRect(self):
+        self.rects.append(Rectangle(self.x,self.y,(255,255,0)))
         pass
+
     def move(self):
         for i in range(1,len(self.rects)):
             self.rects[len(self.rects)-i].x = self.rects[len(self.rects)-i-1].x
@@ -48,18 +53,35 @@ class Snake():
         if self.dir == "down":
             self.rects[0].y += 1*gridlen
 
-        print(self.dir)
+        self.x = self.rects[0].x
+        self.y = self.rects[0].y
+
     def draw_snake(self,screen):
         for i in self.rects:
             i.draw_rect(screen)
+    def self_collide(self):
+        for i in self.rects[1:]:
+            if self.x == i.x and self.y == i.y:
+                print(random.randint(0,100))
+
+
 
 class Food():
     def __init__(self,x,y):
-        self.x = x
-        self.y = y
+        self.x = x*gridlen
+        self.y = y*gridlen
     def draw_food(self,screen):
-        food_rect = Rectangle(self.x*gridlen,self.y*gridlen,(0,100,255))
+        food_rect = Rectangle(self.x,self.y,(0,100,255))
         food_rect.draw_rect(screen)
+    def teleport(self):
+        self.x = random.randint(0,31)*gridlen
+        self.y = random.randint(0,23)*gridlen
+
+def checkPoint():
+    if mert.x == food.x and mert.y == food.y:
+        return True
+    else:
+        return False
 
 def draw_grid(screen):
     x_ = screen_size[0]/gridlen
@@ -75,29 +97,53 @@ def draw():
     screen.fill((255,255,255))
     draw_grid(screen)
     mert.draw_snake(screen)
-    yemek.draw_food(screen)
+    food.draw_food(screen)
     pygame.display.flip()
+
+def edgeCollision():
+    if mert.x > 620:
+        mert.x = 0
+        mert.rects[0].x = 0
+    if mert.x < 0:
+        mert.x = 620
+        mert.rects[0].x = 620
+    if mert.y < 0:
+        mert.y = 460
+        mert.rects[0].y = 460
+    if mert.y > 460:
+        mert.y = 0
+        mert.rects[0].y = 0
+def gameLogic():
+    mert.self_collide()
+    if(checkPoint()):
+        food.teleport()
+        mert.addRect()
+    edgeCollision()
+    
+
 
 def input(event_type):
     if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_LEFT and (mert.dir != "right"):
             mert.dir = "left"
-        if event.key == pygame.K_RIGHT:
+        elif event.key == pygame.K_RIGHT and (mert.dir != "left"):
             mert.dir = "right" 
-        if event.key == pygame.K_UP:
+        elif event.key == pygame.K_UP and (mert.dir != "down"):
             mert.dir = "up"
-        if event.key == pygame.K_DOWN:
+        elif event.key == pygame.K_DOWN and (mert.dir != "up"):
             mert.dir = "down"
 
 mert = Snake("right")
-yemek = Food(20,20)
+food = Food(20,20)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    input(event.type)
+        input(event.type)
     mert.move()
     draw()
+    gameLogic()
     clock.tick(10)
     
 pygame.quit()
