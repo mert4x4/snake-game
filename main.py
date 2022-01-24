@@ -1,6 +1,5 @@
 import pygame
 import random
-import time
 
 screen_size = (640,480)
 screen = pygame.display.set_mode(screen_size)
@@ -9,6 +8,7 @@ clock = pygame.time.Clock()
 
 running = True
 gridlen = 20
+
 
 colors = {
   "snake_head": (244, 162, 97),
@@ -31,6 +31,7 @@ class Rectangle():
         return self.x,self.y,self.height,self.width
     def draw_rect(self,screen):
         pygame.draw.rect(screen,self.color,(self.x,self.y,self.height,self.width),0)
+        pygame.draw.rect(screen,(0,0,0),(self.x,self.y,self.height,self.width),1)#stroke
 
 class Snake():
     def __init__(self,dir,len = 1):
@@ -76,11 +77,11 @@ class Snake():
     def reset(self):
         self.x = screen_size[0]/2
         self.y = screen_size[1]/2
-        self.dir = dir
+        self.dir = "right"
         self.len = len
         self.rects = []
         self.rects.append(Rectangle(self.x,self.y,colors["snake_head"]))
-        self.rects.append(Rectangle(self.x-gridlen,self.y,colors["snake_body"]))
+        self.rects.append(Rectangle(self.x,self.y,colors["snake_body"]))
         self.score = 0
 
 class Food():
@@ -163,6 +164,7 @@ def reset():
 
 mert = Snake("right")
 food = Food(20,20)
+
 
 while running:
     for event in pygame.event.get():
