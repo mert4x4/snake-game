@@ -18,6 +18,45 @@ colors = {
   "food":(231,111,81),
 }
 
+map = [
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1],
+    [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,1,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    ]   
+
+class Obsticles():
+    def __init__(self,map):
+        self.obs = []
+        for i in range(len(map)):
+            for j in range(len(map[i])):
+                if map[i][j] == 1:
+                    self.obs.append(Rectangle(j*gridlen,i*gridlen,(255,255,255)))
+    def draw(self):
+        for i in self.obs:
+            i.draw_rect(screen)
+
+
 class Rectangle():
     def __init__(self,x,y,color):
         self.x = x
@@ -41,6 +80,7 @@ class Snake():
         self.len = len
         self.rects = []
         self.rects.append(Rectangle(self.x,self.y,colors["snake_head"]))
+        self.rects.append(Rectangle(self.x,self.y,colors["snake_body"]))
         self.rects.append(Rectangle(self.x,self.y,colors["snake_body"]))
         self.score = 0
         
@@ -68,12 +108,18 @@ class Snake():
     def draw(self,screen):
         for i in self.rects:
             i.draw_rect(screen)
+
     def self_collide(self):
         for i in self.rects[1:]:
             if self.x == i.x and self.y == i.y:
                 return True
         return False
-
+    def obs_collide(self,obsticles):
+        for i in obsticles.obs:
+            if self.x == i.x and self.y == i.y:
+                return True
+        return False
+        
     def reset(self):
         self.x = screen_size[0]/2
         self.y = screen_size[1]/2
@@ -91,9 +137,14 @@ class Food():
     def draw(self,screen):
         food_rect = Rectangle(self.x,self.y,colors["food"])
         food_rect.draw_rect(screen)
-    def teleport(self):
+    def teleport(self,obsticles):
         self.x = random.randint(0,31)*gridlen
         self.y = random.randint(0,23)*gridlen
+        for i in obsticles.obs:
+            while self.x == i.x and self.y == i.y:
+                self.x = random.randint(0,31)*gridlen
+                self.y = random.randint(0,23)*gridlen
+    
 
 def checkPoint():
     if mert.x == food.x and mert.y == food.y:
@@ -114,6 +165,7 @@ def draw_grid(screen):
 def draw():
     screen.fill((255,255,255))
     draw_grid(screen)
+    obsticles.draw()
     mert.draw(screen)
     food.draw(screen)
     pygame.display.flip()
@@ -133,12 +185,12 @@ def edgeCollision():
         mert.rects[0].y = 0
 
 def gameLogic():
-    if(mert.self_collide()):
+    if(mert.self_collide() or mert.obs_collide(obsticles)):
         reset()
     if(checkPoint()):
         mert.score += 1
         pygame.display.set_caption("score: "+str(mert.score))
-        food.teleport()
+        food.teleport(obsticles)
         mert.addRect()
     edgeCollision()
     
@@ -158,13 +210,13 @@ def reset():
     #snake will shrink
     #snake will teleport to inital location
     #snake direction will be set to right
-    food.teleport()
+    food.teleport(obsticles)
     mert.reset()
     pygame.display.set_caption("score: "+str(mert.score))
 
 mert = Snake("right")
 food = Food(20,20)
-
+obsticles = Obsticles(map)
 
 while running:
     for event in pygame.event.get():
@@ -177,4 +229,3 @@ while running:
     clock.tick(10)
     
 pygame.quit()
-
